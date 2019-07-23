@@ -17,9 +17,9 @@ grammar LoniGrammar {
     proto rule type {*}
 
     rule type:sym<type> {
-        | [ <ident> <type-struct> ]
+        | [ <ident> <type-struct:sym<type>> ]
         | <ident>
-        | <type-struct>
+        | <type-struct:sym<type>>
         | <sequence>
     }
 
@@ -33,7 +33,7 @@ grammar LoniGrammar {
 
     rule type-struct:sym<type> { '{' [ <field-decl> ',' ]* <field-decl> '}' }
 
-    rule type-struct:sym<enum> { '{' [ <field-attr>  ',' ]* <field-attr> '}' }
+    rule type-struct:sym<enum> { '{' [ <field-attr> ',' ]* <field-attr> '}' }
 
     rule field-decl { <field-mod>? <key> '=' <type> [ ':' <value> ]? }
 
@@ -47,13 +47,14 @@ grammar LoniGrammar {
 
     token key { \" <-[\"]>* \" }
 
-    token comment { "#"\N* }
+    token comment { '#'\N* }
 
-    #token ws { \s* | \t* }
+    # token ws { \s* | \t* }
 }
 
 say LoniGrammar.parse('     Action =
-[Data{"key"= Status :2, "other"= None}] Status=[Enum{"zero":0, "first":1}] Type=Null
+[Data{"key"= Status :2,
+"other"= None}] Status=[Enum{"zero":0, "first":1}] Type=Null
 "hello"=Action
 # kkkk # dfkals
 #
